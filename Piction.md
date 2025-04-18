@@ -1,3 +1,5 @@
+big changes, better not lose these
+
 Piction. AI (MVP) Prompt
 TLDR: The goal is to create a game where you have 3 tries to draw a random word or phrase and an AI tries to guess it. It’s scored like golf where the least amount of “ink” measured in pixels is your score. 
 
