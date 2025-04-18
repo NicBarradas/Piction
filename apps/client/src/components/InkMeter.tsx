@@ -5,8 +5,8 @@ interface InkMeterProps {
 }
 
 const InkMeter: React.FC<InkMeterProps> = ({ ink }) => {
-  // Format the ink value nicely (round to nearest integer)
-  const formattedInk = Math.round(ink);
+  // Format the ink value with one decimal place
+  const formattedInk = ink.toFixed(1);
   
   return (
     <div className="ink-meter">
