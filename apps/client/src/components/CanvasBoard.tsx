@@ -2,7 +2,8 @@ import React, { forwardRef, useImperativeHandle, useRef } from 'react';
 import { ReactSketchCanvas } from 'react-sketch-canvas';
 
 interface CanvasBoardProps {
-  onStrokeEnd: (points: any[]) => void;
+  /** length of the finished stroke in pixels */
+  onStrokeEnd: (length: number) => void;
   disabled?: boolean;
 }
 
@@ -37,13 +38,21 @@ const CanvasBoard = forwardRef<any, CanvasBoardProps>(({ onStrokeEnd, disabled =
         withTimestamp={true}
         allowOnlyPointerType="all"
         style={{ border: '1px solid #ccc', borderRadius: '8px' }}
-        onStrokeEnd={(points) => {
-          // Extract the points for ink calculation
-          if (!disabled && points && points.length > 0) {
-            onStrokeEnd(points);
+        onStroke={(stroke: any) => {
+          if (disabled) return;
+
+          const pts = stroke.paths ?? [];          // ← the real data
+          if (pts.length < 2) return;              // dot spam
+
+          let length = 0;
+          for (let i = 1; i < pts.length; i++) {
+            const dx = pts[i].x - pts[i - 1].x;
+            const dy = pts[i].y - pts[i - 1].y;
+            length += Math.hypot(dx, dy);
           }
+
+          if (length >= 5) onStrokeEnd(length);    // ignore tiny strokes
         }}
-        readOnly={disabled}
       />
     </div>
   );

@@ -9,6 +9,8 @@ import useInk from '../hooks/useInk';
 import useTimer from '../hooks/useTimer';
 import { fetchPrompt, submitGuess } from '../api';
 
+interface Point { x: number; y: number }
+
 interface GameProps {
   playerName: string;
   onGameEnd: () => void;
@@ -63,6 +65,7 @@ function Game({ playerName, onGameEnd }: GameProps) {
   // Submit the drawing to the AI
   const handleSubmit = async () => {
     if (!canvasRef.current || !prompt) return;
+    if (isThinking) return;
     
     try {
       setIsThinking(true);
@@ -91,6 +94,7 @@ function Game({ playerName, onGameEnd }: GameProps) {
         setLives(prev => prev - 1);
       }
       
+      setInk(0);
     } catch (error) {
       console.error('Error submitting guess:', error);
       setIsThinking(false);
@@ -113,22 +117,9 @@ function Game({ playerName, onGameEnd }: GameProps) {
     }
   };
   
-  // Handle stroke data for ink calculation
-  const handleStrokeEnd = (points: any[]) => {
-    if (points.length < 2) return;
-    
-    // Calculate stroke length
-    let strokeLength = 0;
-    for (let i = 1; i < points.length; i++) {
-      const dx = points[i].x - points[i-1].x;
-      const dy = points[i].y - points[i-1].y;
-      strokeLength += Math.sqrt(dx*dx + dy*dy);
-    }
-    
-    // Ignore very small strokes (dots)
-    if (strokeLength < 5) return;
-    
-    addInk(strokeLength);
+  // Each stroke already arrives as its pixel length
+  const handleStrokeEnd = (length: number) => {
+    addInk(length);
   };
   
   return (
