@@ -1,0 +1,25 @@
+{
+  "name": "piction",
+  "version": "1.0.0",
+  "description": "A drawing game where AI guesses what you draw",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev:client": "cd apps/client && npm run dev",
+    "dev:server": "cd apps/server && npm run dev",
+    "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\""
+  },
+  "keywords": [
+    "drawing",
+    "ai",
+    "game"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "eslint": "^9.25.0",
+    "prettier": "^3.3.2",
+    "typescript": "^5.4.3"
+  }
+}
